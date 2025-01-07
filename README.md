@@ -1,7 +1,7 @@
-# Google scholar entry collector
+# Google Scholar entry collector
 
-A Python script that collect publication information from google scholar. It uses 
-the the scholarly library.
+A Python script that collect publication information from a given google scholar
+profile. It uses the [Python scholarly library](https://pypi.org/project/scholarly/).
 
 To use it, replace the `scholar_url` in `collect_publications.py` with your
 scholar URL, and run `collect_publications.py` with Python:
