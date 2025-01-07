@@ -13,7 +13,8 @@ def fetch_publications(profile_url, verbose = True):
         author_name = author['name']
 
         if verbose:
-            print("User ID =", user_id, "-- User name =", author_name)
+            print("User ID =", user_id)
+            print("User name =", author_name)
 
         # Search for the profile
         search_query = scholarly.search_author_id(user_id)

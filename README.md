@@ -15,7 +15,8 @@ scholar URL, and run `collect_publications.py` with Python:
 You should see something like that:
 
 ```bash
-    User ID = 9fD2JlYAAAAJ -- User name = Gravelle Simon
+    User ID = 9fD2JlYAAAAJ
+    User name = Gravelle Simon
     2013 Optimizing water permeability through the hourglass shape of aquaporins Proceedings of the National Academy of Sciences
     2014 Large permeabilities of hourglass nanopores: From hydrodynamics to single file transport The Journal of chemical physics
     2013 Nanofluidic osmotic diodes: Theory and molecular dynamics simulations Physical review letters
