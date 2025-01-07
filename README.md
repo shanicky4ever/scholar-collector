@@ -21,7 +21,6 @@ You should see something like that:
     2014 Large permeabilities of hourglass nanopores: From hydrodynamics to single file transport The Journal of chemical physics
     2013 Nanofluidic osmotic diodes: Theory and molecular dynamics simulations Physical review letters
     2014 Sub-additive ionic transport across arrays of solid-state nanopores Physics of Fluids
-    2016 Carbon membranes for efficient water-ethanol separation The Journal of chemical physics
     (...)
 ```
 
