@@ -3,12 +3,28 @@
 A Python script that collect publication information from a given google scholar
 profile. It uses the [Python scholarly library](https://pypi.org/project/scholarly/).
 
+## Use
+
 To use it, replace the `scholar_url` in `collect_publications.py` with your
 scholar URL, and run `collect_publications.py` with Python:
 
 ```bash
     python3 collect_publications.py
 ```
+
+You should see something like that:
+
+```bash
+    User ID = 9fD2JlYAAAAJ
+    2013 Optimizing water permeability through the hourglass shape of aquaporins Proceedings of the National Academy of Sciences
+    2014 Large permeabilities of hourglass nanopores: From hydrodynamics to single file transport The Journal of chemical physics
+    2013 Nanofluidic osmotic diodes: Theory and molecular dynamics simulations Physical review letters
+    2014 Sub-additive ionic transport across arrays of solid-state nanopores Physics of Fluids
+    2016 Carbon membranes for efficient water-ethanol separation The Journal of chemical physics
+    (...)
+```
+
+## Output
 
 By default, publication information is written in a folder YEAR_NAME_JOURNAL,
 located in `path = "./publications"`, to a file named `index.md` that can be read
