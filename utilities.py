@@ -9,8 +9,11 @@ def fetch_publications(profile_url, verbose = True):
     try:
         # Extract the user ID from the URL
         user_id = profile_url.split("user=")[1].split("&")[0]
+        author = scholarly.search_author_id(user_id)
+        author_name = author['name']
+
         if verbose:
-            print("User ID =", user_id)
+            print("User ID =", user_id, "-- User name =", author_name)
 
         # Search for the profile
         search_query = scholarly.search_author_id(user_id)
