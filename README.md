@@ -1,14 +1,15 @@
 # Scholar collector
 
-A Python script that collect publication information from google scholar. For now, the information about the
-publication is written in .cvs files.
+A Python script that collect publication information from google scholar. It uses 
+the the scholarly library.
 
-To use it, replace the `scholar_url` in `collect-publications.py` with your scholar URL, and run `collect-publications.py` with Python.
-
-## Data extraction
-
-Publications are being imported from Google Scholar using the scholarly library.
-You can import your own data by running the `fetch_from_scholar.py` file using Python:
+To use it, replace the `scholar_url` in `collect_publications.py` with your
+scholar URL, and run `collect_publications.py` with Python:
 
 ```bash
-    python3 fetch_from_scholar.py
+    python3 collect_publications.py
+```
+
+By default, publication information is written in a folder YEAR_NAME_JOURNAL,
+located in `path`, to a file named `index.md` that can be read with Hugo webpage,
+just like [this one](https://simongravelle.github.io).
