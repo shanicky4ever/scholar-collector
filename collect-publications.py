@@ -6,3 +6,4 @@ if __name__ == "__main__":
     publications = fetch_publications(simongravelle_url)
     print("Publication fetched")
     detect_if_publication_is_missing(publications)
+    print("Terminated")

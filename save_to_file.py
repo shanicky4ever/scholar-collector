@@ -54,7 +54,7 @@ def detect_if_publication_is_missing(publications, verbose = True, path_to_publi
 
 def save_to_file(pub, path, folder):
     """Save publication to an individual Markdown-like file."""
-    if not os.path.exists(path):  # Create a folder for the files
+    if not os.path.exists(path):
         os.makedirs(path)
 
     year = pub.get('year', 'Unknown')
@@ -69,9 +69,6 @@ def save_to_file(pub, path, folder):
     journal = pub.get('journal', 'Unknown_Journal').replace(' ', '_')
     if journal.lower() in ["n/a", "unknown", ""]:
         journal = "Unknown_Journal"
-
-    filename = f"{year}_{family_name}_{journal}.md"
-    filepath = os.path.join('publications', filename)
 
     date_value = pub.get('date', 'N/A') or 'N/A'
 
@@ -91,8 +88,13 @@ links:
     url: '{pub.get('url', 'N/A')}'
 ---
 """
+    
+    if not os.path.exists(path + folder):
+        os.makedirs(path + folder)
+    else:
+        print("WARNING:", path + folder, " alredy exists")
 
-    with open(filepath, mode='w', encoding='utf-8') as file:
+    with open(path + folder + "/index.md", mode='w', encoding='utf-8') as file:
         file.write(content)
 
     print("Publications saved to individual files in the 'publications' folder.")
