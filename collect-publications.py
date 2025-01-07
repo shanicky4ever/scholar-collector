@@ -2,8 +2,8 @@ from save_to_file import save_to_file
 from fetch_from_scholar import fetch_publications
 
 if __name__ == "__main__":
-    scholar_url = "https://scholar.google.fr/citations?user=9fD2JlYAAAAJ&hl"  # Replace accordingly
-    publications = fetch_publications(scholar_url)
+    simongravelle_url = "https://scholar.google.fr/citations?user=9fD2JlYAAAAJ&hl"  # Replace accordingly
+    publications = fetch_publications(simongravelle_url)
     
     # Debug: Check for missing years
     for pub in publications:
