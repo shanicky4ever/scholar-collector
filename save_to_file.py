@@ -1,41 +1,81 @@
 import os
 
-def save_to_file(publications):
-    """
-    Save each publication to an individual Markdown-like file.
+def detect_if_publication_is_missing(publications, verbose = True, path_to_publications = "publications/"):
+    """Loop over publications, and check if they are already present in path_to_publications."""
+    for publication in publications:
 
-    Args:
-        publications (list): List of publication dictionaries.
-    """
-    try:
-        if not os.path.exists('publications'):  # Create a folder for the files
-            os.makedirs('publications')
+        To_be_ignored = True # ignore some entry
 
-        for pub in publications:
-            year = pub.get('year', 'Unknown')
-            
-            # Extract the first author's last name
-            authors = pub.get('author', 'unknown')
-            if authors.lower() == "unknown" or not authors.strip():
-                family_name = "Unknown_Author"
-            else:
-                first_author = authors.split(' and ')[0].strip() if ' and ' in authors else authors.split(',')[0].strip()
-                family_name = first_author.split()[-1] if first_author else "Unknown_Author"
+        title = publication["title"]
+        year = publication.get('year', 'Unknown')
 
-            # Replace spaces with underscores in the journal name, and handle missing journal
-            journal = pub.get('journal', 'Unknown_Journal').replace(' ', '_')
+        # Extract the first author's last name
+        authors = publication.get('author', 'unknown')
+        if authors.lower() == "unknown" or not authors.strip():
+            family_name = "Unknown_Author"
+        else:
+            first_author = authors.split(' and ')[0].strip() if ' and ' in authors else authors.split(',')[0].strip()
+            family_name = first_author.split()[-1] if first_author else "Unknown_Author"
+            journal = publication.get('journal', 'Unknown_Journal').replace(' ', '_')
+
+            if journal == "Med_Sci_(Paris)":
+                journal = "Med_Sci"
+
             if journal.lower() in ["n/a", "unknown", ""]:
                 journal = "Unknown_Journal"
 
-            # Construct the filename
-            filename = f"{year}_{family_name}_{journal}.md"
-            filepath = os.path.join('publications', filename)
+            folder_name = str(year)+"_"+family_name+"_"+journal
 
-            # Handle missing date fields
-            date_value = pub.get('date', 'N/A') or 'N/A'
+            # Manage exeptions, such as non-journal article, these manuscript, etc.
+            # Adapt to your own case
+            if "arXiv" in journal:
+                To_be_ignored = True
+            elif "Nanofluidics: a theoretical and numerical investigation of fluid transport in nanochannels" in title:
+                journal = "These"
+            elif "Nanofluidics: a pedagogical introduction" in title:
+                journal = "HAL"
+            elif os.path.exists(path_to_publications+folder_name):
+                To_be_ignored = True
+            else:
+                To_be_ignored = False
 
-            # Markdown-like content
-            content = f"""---
+            folder_name = str(year)+"_"+family_name+"_"+journal
+
+        if verbose:
+            if To_be_ignored:
+                print(f"\033[90m {folder_name} {title} will be ignored\033[0m")
+            else:
+                print(f"\033[31m{folder_name}  {title} will be created\033[0m")
+
+        if To_be_ignored is False:
+            save_to_file(publication, path_to_publications, folder_name)
+
+
+
+def save_to_file(pub, path, folder):
+    """Save publication to an individual Markdown-like file."""
+    if not os.path.exists(path):  # Create a folder for the files
+        os.makedirs(path)
+
+    year = pub.get('year', 'Unknown')
+    
+    authors = pub.get('author', 'unknown')
+    if authors.lower() == "unknown" or not authors.strip():
+        family_name = "Unknown_Author"
+    else:
+        first_author = authors.split(' and ')[0].strip() if ' and ' in authors else authors.split(',')[0].strip()
+        family_name = first_author.split()[-1] if first_author else "Unknown_Author"
+
+    journal = pub.get('journal', 'Unknown_Journal').replace(' ', '_')
+    if journal.lower() in ["n/a", "unknown", ""]:
+        journal = "Unknown_Journal"
+
+    filename = f"{year}_{family_name}_{journal}.md"
+    filepath = os.path.join('publications', filename)
+
+    date_value = pub.get('date', 'N/A') or 'N/A'
+
+    content = f"""---
 title: "{pub.get('title', 'N/A')}"
 date: {date_value}-01-01
 publishDate: {date_value}-01-01
@@ -52,28 +92,8 @@ links:
 ---
 """
 
-            with open(filepath, mode='w', encoding='utf-8') as file:
-                file.write(content)
+    with open(filepath, mode='w', encoding='utf-8') as file:
+        file.write(content)
 
-        print("Publications saved to individual files in the 'publications' folder.")
+    print("Publications saved to individual files in the 'publications' folder.")
 
-    except Exception as e:
-        print(f"Error saving individual files: {e}")
-
-
-if __name__ == "__main__":
-    scholar_url = "https://scholar.google.fr/citations?user=9fD2JlYAAAAJ&hl"  # Replace accordingly
-    publications = fetch_publications(scholar_url)
-    
-    # Debug: Log all fetched publications to check for missing fields
-    for pub in publications:
-        if not pub.get('journal') or not pub.get('author'):
-            print(f"Incomplete publication data: {pub}")
-    
-    # Debugging for 2024 publications
-    for pub in publications:
-        if pub.get('year') == '2024':
-            print(f"Found 2024 publication: {pub['title']}")
-    
-    print("Publication fetched")
-    save_to_individual_files(publications)
