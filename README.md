@@ -11,8 +11,10 @@ scholar URL, and run `collect_publications.py` with Python:
 ```
 
 By default, publication information is written in a folder YEAR_NAME_JOURNAL,
-located in `path`, to a file named `index.md` that can be read with Hugo webpage,
-just like [this one](https://simongravelle.github.io).
+located in `path = "./publications"`, to a file named `index.md` that can be read
+with [Hugo](https://gohugo.io/) framework, just
+like [my personal page](https://simongravelle.github.io). Feel free to clone and
+adapt to your content.
 
 Output looks like that:
 ```bash
