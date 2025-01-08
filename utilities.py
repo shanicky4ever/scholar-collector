@@ -139,6 +139,8 @@ def define_folder_name(publication):
 
     title = publication["title"]
     year = publication.get('year', 'Unknown')
+    volume = publication.get('volume', 'Unknown')
+    issue = publication.get('issue', 'Unknown')
 
     # Extract the first author's last name
     authors = publication.get('author', 'unknown')
@@ -151,7 +153,12 @@ def define_folder_name(publication):
 
     journal = manage_exception(journal, title)
 
-    folder_name = str(year)+"_"+family_name+"_"+journal
+    if ("N/A" not in volume) & ("N/A" not in issue):
+        folder_name = str(year)+"_"+volume+"_"+issue+"_"+family_name+"_"+journal
+    elif ("N/A" not in volume):
+        folder_name = str(year)+"_"+volume+"_"+family_name+"_"+journal
+    else:
+        folder_name = str(year)+"_"+family_name+"_"+journal
 
     return folder_name, title
 
