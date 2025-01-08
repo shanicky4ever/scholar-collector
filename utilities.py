@@ -171,7 +171,7 @@ def save_to_file(pub, path, folder, author_name, verbose):
 title: "{title}"
 date: {date}
 publishDate: {date}
-authors: {authors_str}
+authors: {"["+authors_str+"]"}
 publication_types: ["{publication_type}"]
 abstract: "{abstract.replace('\n', ' ').replace('\"', '\'')}"
 featured: true
