@@ -10,6 +10,7 @@ def main(path="publications/"):
     
     # Read publication from Google Scholar
     publications = fetch_publications(simongravelle_url)
+
     print("\033[35mPublication fetched\033[0m")
     
     add_missing_publications(publications, path, author_name)

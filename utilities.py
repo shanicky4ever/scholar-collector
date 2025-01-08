@@ -2,7 +2,13 @@ from scholarly import scholarly
 import numpy as np
 import time
 import os
+import re
 
+def is_valid_doi(doi):
+    # Regex to match standard DOI pattern (e.g., 10.xxxx/xxxxxxx)
+    doi_pattern = r"^10\.\d{4,9}/[-._;()/:A-Z0-9]+$"
+    # Test if the DOI matches the pattern
+    return bool(re.match(doi_pattern, doi))
 
 def fetch_publications(profile_url, verbose = True):
     """Fetch all publications from a Google Scholar profile."""
@@ -28,13 +34,37 @@ def fetch_publications(profile_url, verbose = True):
             journal = pub_details.get('bib', {}).get('journal', 'N/A')
             author = pub_details.get('bib', {}).get('author', 'N/A')
             abstract = pub_details.get('bib', {}).get('abstract', 'N/A')
-            url = pub_details.get('eprint_url', 'N/A')
-            doi = pub_details.get('pub_url', 'N/A')
             volume = pub_details.get('bib', {}).get('volume', 'N/A')
             issue = pub_details.get('bib', {}).get('number', 'N/A'),
             if isinstance(issue, tuple):  # Check if 'issue' is a tuple
                 issue = issue[0] # Extract the first element from the tuple
-                
+
+            # Try to get the doi
+            full_doi = pub_details.get('doi', 'N/A')
+            if full_doi == 'N/A':
+                full_doi = pub_details.get('bib', {}).get('doi', 'N/A')
+            if full_doi == 'N/A':
+                full_doi = pub_details.get('url', 'N/A')
+            if full_doi == 'N/A':
+                full_doi = pub_details.get('eprint_url', 'N/A')
+            if full_doi == 'N/A':
+                full_doi = pub_details.get('pub_url', 'N/A')
+            if full_doi == 'N/A' and url != 'N/A':
+                full_doi = url
+
+            # Try to get the primary URL
+            url = pub_details.get('url', 'N/A')
+            if url == 'N/A':
+                url = pub_details.get('eprint_url', 'N/A')
+            if url == 'N/A':
+                url = pub_details.get('pub_url', 'N/A')
+            if (url == 'N/A') & (full_doi != 'N/A'):
+                url = full_doi  # Use DOI as a fallback URL
+
+            if (full_doi != 'N/A'):
+                if is_valid_doi(full_doi.split('/')[-2]+"/"+full_doi.split('/')[-1]):
+                    full_doi = full_doi.split('/')[-2]+"/"+full_doi.split('/')[-1]
+
             # Try date-related information
             year = pub_details.get('bib', {}).get('pub_year', 'N/A')
             month = pub_details.get('bib', {}).get('pub_month', 'N/A')
@@ -71,7 +101,7 @@ def fetch_publications(profile_url, verbose = True):
                 'year': year,
                 'url': url,
                 'abstract': abstract,
-                'doi': doi,
+                'doi': full_doi,
                 'volume': volume,
                 'issue': issue,
                 'is_preprint': is_preprint,
@@ -148,12 +178,12 @@ def save_to_file(pub, path, folder, author_name, verbose):
     title = pub.get('title', 'N/A')
     authors = pub.get('author', 'N/A')
     journal = pub.get('journal', 'N/A')
-    year = pub.get('year', 'N/A')
     url = pub.get('url', 'N/A')
     abstract = pub.get('abstract', 'N/A')
     doi = pub.get('doi', 'N/A')
-    volume = pub.get('volume', 'N/A')
-    issue = pub.get('issue', 'N/A')
+    year = pub.get('year', None)
+    volume = pub.get('volume', None)
+    issue = pub.get('issue', None)
 
     # Split authors string into a list if needed
     if isinstance(authors, str):
@@ -163,9 +193,16 @@ def save_to_file(pub, path, folder, author_name, verbose):
     formatted_authors = [
         f"**{author}**" if author == "Simon Gravelle" else author for author in authors
     ]
-
-    # Convert authors to Markdown format
     authors_str = ", ".join(f'"{author}"' for author in formatted_authors)
+
+    # Construct publication string
+    publication_entry = f"**{journal}** "
+    if year:
+        publication_entry += f" **{year}**"
+    if volume:
+        publication_entry += f", {volume}"
+    if issue:
+        publication_entry += f" ({issue})"
 
     content = f"""---
 title: "{title}"
@@ -175,10 +212,8 @@ authors: {"["+authors_str+"]"}
 publication_types: ["{publication_type}"]
 abstract: "{abstract.replace('\n', ' ').replace('\"', '\'')}"
 featured: true
-publication: "{journal}"
+publication: "{publication_entry}"
 doi: "{doi}"
-volume: "{volume}"
-issue: "{issue}"
 links:
   - icon_pack: fas
     icon: scroll
