@@ -125,14 +125,14 @@ def define_folder_name(publication):
 
     return folder_name, title
 
-def add_missing_publications(publications, path_to_publications, verbose = True):
+def add_missing_publications(publications, path_to_publications, author_name, verbose = True):
     """Loop over publications, and check if they are already present in path_to_publications."""
     for publication in publications:
         folder_name, title = define_folder_name(publication)
         if folder_name is not None:
-            save_to_file(publication, path_to_publications, folder_name, verbose)
+            save_to_file(publication, path_to_publications, folder_name, author_name, verbose)
 
-def save_to_file(pub, path, folder, verbose):
+def save_to_file(pub, path, folder, author_name, verbose):
     """Save publication to an individual Markdown-like file."""
     if not os.path.exists(path):
         os.makedirs(path)
@@ -155,11 +155,23 @@ def save_to_file(pub, path, folder, verbose):
     volume = pub.get('volume', 'N/A')
     issue = pub.get('issue', 'N/A')
 
+    # Split authors string into a list if needed
+    if isinstance(authors, str):
+        authors = [author.strip() for author in authors.split(" and ")]
+
+    # Apply formatting for "Simon Gravelle"
+    formatted_authors = [
+        f"**{author}**" if author == "Simon Gravelle" else author for author in authors
+    ]
+
+    # Convert authors to Markdown format
+    authors_str = ", ".join(f'"{author}"' for author in formatted_authors)
+
     content = f"""---
 title: "{title}"
 date: {date}
 publishDate: {date}
-authors: ["{authors.replace(', ', '", "')}"]
+authors: {authors_str}
 publication_types: ["{publication_type}"]
 abstract: "{abstract.replace('\n', ' ').replace('\"', '\'')}"
 featured: true
