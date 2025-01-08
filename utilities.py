@@ -213,7 +213,6 @@ publication_types: ["{publication_type}"]
 abstract: "{abstract.replace('\n', ' ').replace('\"', '\'')}"
 featured: true
 publication: "{publication_entry}"
-doi: "{doi}"
 links:
   - icon_pack: fas
     icon: scroll
