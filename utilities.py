@@ -196,13 +196,15 @@ def save_to_file(pub, path, folder, author_name, verbose):
     authors_str = ", ".join(f'"{author}"' for author in formatted_authors)
 
     # Construct publication string
-    publication_entry = f"**{journal}** "
+    publication_entry = f"{journal} "
     if year:
-        publication_entry += f" **{year}**"
+        publication_entry += f"{year} "
     if volume:
-        publication_entry += f", {volume}"
+        if 'N/A' not in volume:
+            publication_entry += f"{volume} "
     if issue:
-        publication_entry += f" ({issue})"
+        if 'N/A' not in issue:
+            publication_entry += f"({issue})"
 
     content = f"""---
 title: "{title}"
