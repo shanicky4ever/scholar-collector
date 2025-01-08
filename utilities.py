@@ -88,7 +88,7 @@ def fetch_publications(profile_url, verbose = True):
             if isinstance(is_preprint, tuple):  # Check if 'issue' is a tuple
                 is_preprint = is_preprint[0] # Extract the first element from the tuple
 
-            journal = manage_exception(journal, title)
+            journal, _ = manage_exception(journal, title, "")
 
             # Debugging missing years
             if year == 'N/A':
@@ -118,7 +118,7 @@ def fetch_publications(profile_url, verbose = True):
         print(f"Error fetching publications: {e}")
         return []
 
-def manage_exception(journal, title):
+def manage_exception(journal, title, family_name):
     # Manage exeptions, such as non-journal article, these manuscript, etc.
     # Adapt to your own case
     if "Nanofluidics: a theoretical and numerical investigation of fluid transport in nanochannels" in title:
@@ -131,7 +131,9 @@ def manage_exception(journal, title):
         journal = "arXiv"
     elif journal.lower() in ["n/a", "unknown", ""]:
         journal = "Unknown Journal"
-    return journal
+    if "Guérin" in family_name:
+        family_name = "Guerin"
+    return journal, family_name
 
 def define_folder_name(publication):
     """Read publication information and define folder name from it"""
@@ -151,7 +153,7 @@ def define_folder_name(publication):
         family_name = first_author.split()[-1] if first_author else "Unknown_Author"
         journal = publication.get('journal', 'Unknown_Journal').replace(' ', '_')
 
-    journal = manage_exception(journal, title)
+    journal, family_name = manage_exception(journal, title, family_name)
 
     if ("N/A" not in volume) & ("N/A" not in issue):
         folder_name = str(year)+"_"+volume+"_"+issue+"_"+family_name+"_"+journal
