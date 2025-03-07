@@ -4,7 +4,7 @@ import sys
 
 def main(path="publications/"):
     # Replace accordingly
-    simongravelle_url = "https://scholar.google.fr/citations?user=9fD2JlYAAAAJ&hl"
+    simongravelle_url = "https://scholar.google.com/citations?user=UKlBTuwAAAAJ"
     # Author name (for proper highlighting) Replace accordingly
     author_name = "Simon Gravelle"
     
