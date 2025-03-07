@@ -215,23 +215,23 @@ def save_to_file(pub, path, folder, author_name, verbose):
         if 'N/A' not in issue:
             publication_entry += f"({issue})"
 
+    abstract_cleaned = abstract.replace("\n", " ").replace('"', "'")
     content = f"""---
-title: "{title}"
-date: {date}
-publishDate: {date}
-authors: {"["+authors_str+"]"}
-publication_types: ["{publication_type}"]
-abstract: "{abstract.replace('\n', ' ').replace('\"', '\'')}"
-featured: true
-publication: "{publication_entry}"
-links:
-  - icon_pack: fas
+    title: "{title}"
+    date: {date}
+    publishDate: {date}
+    authors: ["{authors_str}"]
+    publication_types: ["{publication_type}"]
+    abstract: "{abstract_cleaned}"
+    featured: true
+    publication: "{publication_entry}"
+    links:
+    - icon_pack: fas
     icon: scroll
     name: Link
     url: '{url}'
----
+    ---
 """
-    
     if not os.path.exists(path + folder):
         os.makedirs(path + folder)
         with open(path + folder + "/index.md", mode='w', encoding='utf-8') as file:
